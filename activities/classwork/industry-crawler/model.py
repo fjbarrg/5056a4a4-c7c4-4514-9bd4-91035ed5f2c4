@@ -5,27 +5,26 @@ import requests
 
 from bs4 import BeautifulSoup
 
-
 logger = logging.getLogger(__name__)
 
 
 class AbstractIndustry(object):
 
     def __init__(self, title, children):
-        logger.info("Creating industry: {title}".format(title=title))
+        logger.info("Creating industry:{}". format(title))
         self.title = title
         self.children = children
 
     @property
     def level(self):
-        raise NotImplementedError("Abstract industry doesn't contains level.")
+        raise NotImplementedError("Abstract Industry doesn't contain level.")
 
     def add_child(self, child):
         self.children.append(child)
 
     def to_dict(self):
-        return {
-            "title": self.title,
+        return{
+            "title":self.title,
             "children": [
                 child.to_dict() for child in self.children
             ]
@@ -34,10 +33,8 @@ class AbstractIndustry(object):
     def jsonify(self):
         return json.dumps(self.to_dict())
 
-
 class Division(AbstractIndustry):
     level = "SIC Division"
-
 
 class MajorGroup(AbstractIndustry):
     level = "SIC Major Group"
@@ -47,8 +44,8 @@ class MajorGroup(AbstractIndustry):
         response = requests.get(url)
         html = BeautifulSoup(response.text, 'html.parser')
         return MajorGroup(
-            title=[
-                elm.text for elm in html.find_all("h2") if elm.text.lower().startswith("major group")
+        title=[
+            elm.text for elm in html.find_all("h2") if elm.text.lower().startswith("major group")
             ][0],
             children=[
                 Group(
@@ -59,7 +56,7 @@ class MajorGroup(AbstractIndustry):
                             children=[]
                         )
                         for inner in html.find_all("a")
-                        if inner.attrs.get("href", "").startswith("sic_manual")
+                        if inner.attrs.get("href","").startswith("sic_manual")
                         and inner.parent.text.startswith(group.text.split(":")[0].split(" ")[-1])
                     ]
                 )
@@ -67,14 +64,11 @@ class MajorGroup(AbstractIndustry):
             ]
         )
 
-
 class Group(AbstractIndustry):
     level = "SIC Group"
 
-
 class Single(AbstractIndustry):
     level = "SIC Industry"
-
 
 class SIC(AbstractIndustry):
     level = "Standard Industry Classification"
@@ -82,8 +76,8 @@ class SIC(AbstractIndustry):
     @staticmethod
     def load_json(filename):
         with open(filename, "r") as file:
-            sic_industries = json.loads(file.read())
-        return sic_industries
+            sic_industry = json.loads(file.read())
+        return sic_industry
 
     @staticmethod
     def from_url(url):
