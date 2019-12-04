@@ -1,4 +1,3 @@
--- Create student table
 CREATE TABLE IF NOT EXISTS student (
     id UUID,
     first_name TEXT,
