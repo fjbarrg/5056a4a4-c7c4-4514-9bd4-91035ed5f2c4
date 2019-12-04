@@ -11,23 +11,14 @@ class Main(object):
 
     @staticmethod
     def annuity(amount, interest, n):
-        amortization = Amortization(amount, interest, n)
-        return amortization.annuity
+        pass
 
-    def table(self, amount, interest, n, save=""):
-        amortization = Amortization(amount, interest, n)
-        df = amortization.get_table()
-        print(df)
-        if save:
-            df.to_csv(save)
+    def table(self, amount, interest, n, rows=10, save=""):
+        pass
 
     def graph(self, amount, interest, n, save=""):
-        amortization = Amortization(amount, interest, n)
-        fig = amortization.get_plot()
-        if save:
-            fig.savefig(save)
+        pass
 
 
 if __name__ == "__main__":
     fire.Fire(Main)
-
